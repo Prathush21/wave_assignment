@@ -29,6 +29,7 @@ def run_predicion_model():
     m = NeuralProphet(changepoints_range=0.95, 
                     n_changepoints=50, 
                     trend_reg=1, 
+                    epochs=10,
                     weekly_seasonality=False, 
                     daily_seasonality=10, 
                     yearly_seasonality=10)
@@ -62,6 +63,7 @@ def run_predicion_model():
     m = NeuralProphet(changepoints_range=0.95, 
                     n_changepoints=50, 
                     trend_reg=1, 
+                    epochs=10,
                     weekly_seasonality=False, 
                     daily_seasonality=10, 
                     yearly_seasonality=10)
@@ -91,7 +93,8 @@ def run_predicion_model():
 
     m = NeuralProphet(changepoints_range=0.95, 
                     n_changepoints=50, 
-                    trend_reg=1, 
+                    trend_reg=1,
+                    epochs=10,
                     weekly_seasonality=False, 
                     daily_seasonality=10, 
                     yearly_seasonality=10)
@@ -127,6 +130,7 @@ def run_predicion_model():
     m = NeuralProphet(changepoints_range=0.95, 
                     n_changepoints=50, 
                     trend_reg=1, 
+                    epochs=10,
                     weekly_seasonality=False, 
                     daily_seasonality=10, 
                     yearly_seasonality=10)
