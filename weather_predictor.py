@@ -8,20 +8,20 @@ import os
 
 warnings.filterwarnings('ignore')
 
+weather_data_path = "datasets/weatherdata.csv"
+
 def run_predicion_model():
-    df = pd.read_csv("datasets/weatherdata.csv")
+    df = pd.read_csv(weather_data_path)
     df['time_stamp'] = pd.to_datetime(df['time_stamp'])
     df.set_index('time_stamp')
-    temp = df.drop('time_stamp', axis=1)
     df['date'] = df['time_stamp'].dt.date
     df['year'] = df['time_stamp'].dt.year
     df['month'] = df['time_stamp'].dt.month
 
 
-    df1 = df[df['date'] >= date(2017,1,1)]
     dfbefore2021 = df[df['year']<2021]
 
-    df = pd.read_csv("datasets/weatherdata.csv")[['time_stamp', 'temperature']]
+    df = pd.read_csv(weather_data_path)[['time_stamp', 'temperature']]
     df.time_stamp = pd.to_datetime(df.time_stamp)
 
     df.rename(columns = {'time_stamp':'ds', 'temperature':'y'}, inplace = True)
@@ -48,7 +48,7 @@ def run_predicion_model():
 
     """# <a>Wind Speed</a>"""
 
-    df = pd.read_csv("datasets/weatherdata.csv")[['time_stamp', 'wind_speed']]
+    df = pd.read_csv(weather_data_path)[['time_stamp', 'wind_speed']]
 
     df.time_stamp = pd.to_datetime(df.time_stamp)
 
@@ -81,7 +81,7 @@ def run_predicion_model():
 
     """# <a>Pressure</a>"""
 
-    df = pd.read_csv("datasets/weatherdata.csv")[['time_stamp', 'mean_sea_level_pressure']]
+    df = pd.read_csv(weather_data_path)[['time_stamp', 'mean_sea_level_pressure']]
     df.time_stamp = pd.to_datetime(df.time_stamp)
 
     monthlypressure = pd.DataFrame(dfbefore2021.groupby(['month'])['mean_sea_level_pressure'].mean())
@@ -111,7 +111,7 @@ def run_predicion_model():
 
     """# <a>Total Cloud Cover</a>"""
 
-    df = pd.read_csv("datasets/weatherdata.csv")[['time_stamp', 'total_cloud_cover']]
+    df = pd.read_csv(weather_data_path)[['time_stamp', 'total_cloud_cover']]
     df.time_stamp = pd.to_datetime(df.time_stamp)
 
 
