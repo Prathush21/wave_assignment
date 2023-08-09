@@ -40,7 +40,7 @@ def init(q: Q):
     )
 
     q.page['graph_form'] = ui.form_card(box='graph_form', items=[
-        ui.dropdown(name='state', label='Weather State', value='temperature', choices=[
+        ui.dropdown(name='state', label='Select a Weather State', value='temperature', choices=[
             ui.choice(name='temperature', label='Temperature'),
             ui.choice(name='windspeed', label='Wind speed'),
             ui.choice(name='pressure', label='Pressure'),
