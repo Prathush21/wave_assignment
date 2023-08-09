@@ -1,6 +1,8 @@
 from h2o_wave import main, site, ui, Q, app, data
 from weather_predictor import run_predicion_model, get_today_weather_state, get_weather_state_day, get_monthly_data
-
+from utils import write_dates_to_file, check_today_date_in_file, create_empty_text_file
+import os
+import datetime
 
 def init(q: Q):
 
@@ -46,43 +48,55 @@ def init(q: Q):
 
     q.page['prediction_form'] = ui.form_card(box='prediction_form', items=[
         ui.date_picker(name='date_picker', label='Date'),
-        ui.button(name='button', label='Predict', primary=True)
+        ui.button(name='prediction_button', label='Predict', primary=True)
     ])
 
 
-@app('/dashboard')
+@app('/')
 async def serve(q: Q):
+
+    weather_state = q.client.state or 'temperature' 
+
 
     if not q.client.initialized:
         init(q)
-        run_predicion_model()
-        q.client.initialized = True
-        json_data = get_today_weather_state()
 
-        q.page['temp_card'] = ui.tall_info_card(
+        if not os.path.exists('dates.txt'):
+            create_empty_text_file('dates.txt')
+
+        if not check_today_date_in_file('dates.txt'):
+            run_predicion_model()
+            write_dates_to_file(datetime.datetime.now().date(), 'dates.txt')
+                    
+        # 
+        q.client.initialized = True
+
+    json_data = get_today_weather_state()
+
+    q.page['temp_card'] = ui.tall_info_card(
             box=ui.box('weather_summary', width='200px', height='200px'), name='', title='Temperature', icon='Sunny', caption=str(round(json_data['temperature'], 2)) + '°C')
-        q.page['wind_card'] = ui.tall_info_card(
+    q.page['wind_card'] = ui.tall_info_card(
             box=ui.box('weather_summary', width='200px', height='200px'), name='', title='Wind Speed', icon='SwitcherStartEnd', caption=str(round(json_data['windspeed'], 2)) + ' kmph')
-        q.page['pressure'] = ui.tall_info_card(
+    q.page['pressure'] = ui.tall_info_card(
             box=ui.box('weather_summary', width='200px', height='200px'), name='', title='Pressure', icon='TestBeakerSolid', caption=str(round(json_data['pressure'], 2)) + ' Pa')
-        q.page['cloud_cover'] = ui.tall_info_card(
+    q.page['cloud_cover'] = ui.tall_info_card(
             box=ui.box('weather_summary', width='200px', height='200px'), name='', title='Cloud Cover', icon='CloudWeather', caption=str(abs(round(json_data['cloudcover'], 2))))
 
     monthly_data = get_monthly_data()
-    weather_state = 'temperature'
 
-    if q.args.state:
-        weather_state = q.args.state
+
+    if q.args.button:
+        q.client.state = weather_state = q.args.state
 
     q.page['line_chart'] = ui.plot_card(
         box='visualization',
         title='Last 30 days average ' + weather_state + ' change',
         data=data('date ' + weather_state,
                   rows=[
-                      (i['date'], i[weather_state]) for i in monthly_data
+                      (i['date'], round(i[weather_state],2)) for i in monthly_data
                   ]),
         plot=ui.plot([ui.mark(type='line', x_scale='time', x='=date',
-                              y='='+weather_state, y_min=15, x_title='Date', y_title=weather_state)])
+                              y='='+weather_state, x_title='Date', y_title=weather_state)])
 
     )
 
