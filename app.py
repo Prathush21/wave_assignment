@@ -11,6 +11,7 @@ def init(q: Q):
             ui.layout(breakpoint='xs', zones=[
                 ui.zone('header'),
                 ui.zone('content', zones=[
+                    ui.zone('summary_title'),
                     ui.zone('weather_summary',
                             direction=ui.ZoneDirection.ROW,
                             align='center',
@@ -25,6 +26,10 @@ def init(q: Q):
             ])
         ]
     )
+
+    q.page['summary_title'] = ui.form_card(box='summary_title', items=[
+        ui.text_l('Average weather states for today'),
+    ])
 
     q.page['header'] = ui.header_card(
         box='header',
@@ -47,7 +52,7 @@ def init(q: Q):
     ])
 
     q.page['prediction_form'] = ui.form_card(box='prediction_form', items=[
-        ui.date_picker(name='date_picker', label='Date'),
+        ui.date_picker(name='date_picker', label='Select a Date for weather forecast'),
         ui.button(name='prediction_button', label='Predict', primary=True)
     ])
 

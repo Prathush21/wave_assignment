@@ -190,7 +190,7 @@ def run_predicion_model():
     final['temperature'] = temp['yhat1']
     final['windspeed'] = wind['yhat1']
     final['pressure'] = pressure['yhat1']
-    final['cloudcover'] = cloudcover['yhat1']
+    final['cloudcover'] = abs(cloudcover['yhat1'])
 
     final.to_csv('outputs/allpredicted.csv',index=False)
 
